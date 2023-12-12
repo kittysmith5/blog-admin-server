@@ -13,8 +13,6 @@ router.get("/fetch", (req, resp) => {
     }).catch(err => {
         console.log(err.message);
     })
-    // console.log(data);
-    // resp.send(JSON.stringify(data))
 })
 
 router.get("/fetch-text/:uuid", (req, resp) => {

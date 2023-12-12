@@ -3,9 +3,11 @@ const userDao = require('../dao/blogDao');
 
 exports.getBlogNoText = async () => {
     const data = await userDao.getBlogNoText();
+    data.forEach(blog => {
+        blog.date = blog.date.toLocaleString()
+    });
     return data;
 }
-
 
 exports.getBlogText = async (uuid) => {
     const data = await userDao.getBlogText(uuid);

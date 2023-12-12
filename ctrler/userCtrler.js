@@ -6,8 +6,3 @@ exports.getUserIdByNameAndPasswd = async (uname,pswd) => {
     // console.log(data);
     return data;
 }
-
-exports.getAll = async () => {
-    const data = await homeDao.getAll();
-    return data;
-}
