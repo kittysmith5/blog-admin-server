@@ -1,5 +1,5 @@
 const express = require("express")
-const blogCtrler = require('../ctrler/blogCtrler.js');
+const blogController = require('../controller/blogController');
 const router = express.Router()
 
 //使用中间件进行拦截以及相关操作,用next()放行
@@ -7,13 +7,7 @@ router.use((req, resp, next) => {
     next()
 })
 
-router.get("/fetch", (req, resp) => {
-    blogCtrler.getBlogNoText().then(res => {
-        resp.send(res)
-    }).catch(err => {
-        console.log(err.message);
-    })
-})
+router.get("/fetch",blogController.getBlogNoText)
 
 router.get("/fetch-text/:uuid", (req, resp) => {
     // console.log("------------");

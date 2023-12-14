@@ -1,10 +1,12 @@
-const { db } = require('./baseDao.js')
+const BaseDao = require('./baseDao');
 
-exports.getUserIdByNameAndPasswd = async (uname,pswd) => {
-    const data = await db(
-        'SELECT id FROM `users_table` where username = ? and password = ? limit 1',
-        [uname,pswd]
-    )
-    // console.log(data);
-    return data
+
+class UserDao extends BaseDao {
+    async getUserIdByNameAndPasswd(uname, pswd) {
+        return await this.execute(
+            'SELECT id FROM `users_table` where username = ? and password = ? limit 1',
+            [uname, pswd]
+        )
+    }
 }
+module.exports = UserDao

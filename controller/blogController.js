@@ -1,12 +1,14 @@
 //在controller中只控制数据,不访问数据库
-const userDao = require('../dao/blogDao');
+const blogService = require('../service/blogService');
+const userDao = require('../dao/userDao');
 
-exports.getBlogNoText = async () => {
-    const data = await userDao.getBlogNoText();
-    data.forEach(blog => {
-        blog.date = blog.date.toLocaleString()
-    });
-    return data;
+exports.getBlogNoText = async (req, res, next) => {
+    try {
+        const bloginfos = await blogService.getBlogNoText();
+        res.json(bloginfos);
+    } catch (error) {
+        next(error);
+    }
 }
 
 exports.getBlogText = async (uuid) => {

@@ -1,26 +1,43 @@
-const fs = require('fs/promises')
 const path = require('node:path')
+const fs = require('fs/promises')
 
 const toml = require('toml')
-const mysql = require("mysql2/promise");
+const mysql = require('mysql2/promise');
 
-exports.db = async (sql, arr) => {
-    let db;
-    try {
-        const dbConfig = await fs.readFile(path.resolve(__dirname, "../config.toml"), "utf-8")
-        db = toml.parse(dbConfig)
-    } catch (err) {
-        console.log(err);
+class BaseDao {
+    constructor() {
+        this.config = null;
+        this.loadConfig();
     }
-
-    const connection = await mysql.createConnection({
-        host: db.mysql.host,
-        user: db.mysql.user,
-        password: db.mysql.password,
-        database: db.mysql.database,
-        port: db.mysql.port,
-    });
-    const [data] = await connection.execute(sql, arr);
-    connection.end();
-    return data
+    async loadConfig() {
+        const confPath = path.resolve(__dirname, "../config.toml")
+        try {
+            const configFile = await fs.readFile(confPath, 'utf-8');
+            const config = toml.parse(configFile);
+            this.config = config.mysql;
+        } catch (error) {
+            console.error('Error loading database configuration:', error);
+            throw error;
+        }
+    }
+    async getConnection() {
+        if (!this.config) {
+            await this.loadConfig();
+        }
+        return await mysql.createConnection(this.config);
+    }
+    async execute(sql, params) {
+        const connection = await this.getConnection();
+        try {
+            //解构赋值
+            const [results,] = await connection.execute(sql, params);
+            return results;
+        } catch (error) {
+            throw error;
+        } finally {
+            await connection.end();
+        }
+    }
 }
+
+module.exports = BaseDao;
