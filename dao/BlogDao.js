@@ -1,4 +1,4 @@
-const BaseDao = require('./baseDao');
+const BaseDao = require('./BaseDao');
 
 class BlogDao extends BaseDao {
     async getBlogNoText() {
@@ -10,7 +10,7 @@ class BlogDao extends BaseDao {
         );
     }
 
-    async getBlogText(uuid) {
+    async getBlogTextByUUID(uuid) {
         return await this.execute(
             "SELECT md_text \
             FROM `table_blog`\
@@ -18,8 +18,8 @@ class BlogDao extends BaseDao {
             [uuid]
         );
     }
-    
-    async updateBlogByUUID(uuid, newUUID, title, mdText) {
+
+    async editBlogByUUID(uuid, newUUID, title, mdText) {
         return await this.execute(
             "UPDATE `table_blog` \
             SET uuid = ?,\

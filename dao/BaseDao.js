@@ -7,8 +7,11 @@ const mysql = require('mysql2/promise');
 class BaseDao {
     constructor() {
         this.config = null;
-        this.loadConfig();
+        this.loadConfig().catch(err => {
+            console.log("加载数据库文件失败： ", err)
+        });
     }
+
     async loadConfig() {
         const confPath = path.resolve(__dirname, "../config.toml")
         try {
@@ -20,12 +23,14 @@ class BaseDao {
             throw error;
         }
     }
+
     async getConnection() {
         if (!this.config) {
             await this.loadConfig();
         }
         return await mysql.createConnection(this.config);
     }
+
     async execute(sql, params) {
         const connection = await this.getConnection();
         try {
